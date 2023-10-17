@@ -1,10 +1,11 @@
 import React from "react";
+import FlipCardImage from "./FlipCardImage";
 
 function FlipCardBack(props) {
   return (
     <div class="flip-card-back">
       <div className="flip-card-back__img">
-        <img src="https://picsum.photos/450/350" alt="Note"></img>
+        <FlipCardImage />
       </div>
       <div>
         <audio></audio>

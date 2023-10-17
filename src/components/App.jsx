@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import InputCard from "./InputCard";
-import FlipCard from "./FlipCard";
+import InputCard from "./InputNote/InputCard";
+import FlipCard from "./ShowNote/FlipCard";
 
 function App() {
   const [isInput, setIsInput] = useState(true);
