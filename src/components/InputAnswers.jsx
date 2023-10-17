@@ -9,7 +9,6 @@ function InputAnswer() {
         minRows={4}
         variant="outlined"
         placeholder="Notes/Answers"
-        classes="text"
       />
     </div>
   );
