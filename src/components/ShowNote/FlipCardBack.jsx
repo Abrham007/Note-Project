@@ -7,14 +7,27 @@ function FlipCardBack(props) {
       <div className="flip-card-back__img">
         <FlipCardImage />
       </div>
-      <div>
-        <audio></audio>
-      </div>
-      <div className="btn-group">
-        <button className="btn" onClick={(event) => props.showNote(event)}>
-          Create Note
-        </button>
-        <button className="btn">Delete</button>
+      <div className="flip-card-back__container">
+        <div>
+          <audio
+            style={{ border: "10px solid #fab1a0", borderRadius: "30px" }}
+            controls
+          >
+            <source
+              src="C:\Users\abrha\Documents\Sound Recordings\blockchain intro 1.m4a"
+              type="audio/mp4"
+            ></source>
+          </audio>
+        </div>
+        <div className="btn-dropdown">
+          <button className="btn">Note Menu</button>
+          <div className="btn-group">
+            <button className="btn" onClick={(event) => props.showNote(event)}>
+              Create Note
+            </button>
+            <button className="btn">Delete Note</button>
+          </div>
+        </div>
       </div>
     </div>
   );

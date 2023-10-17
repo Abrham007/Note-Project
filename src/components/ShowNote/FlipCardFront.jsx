@@ -16,7 +16,7 @@ function FlipCardFront() {
       </div>
       <div>
         <h2>Questions/Keywords</h2>
-        <p>
+        <p className="indent">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
           eleifend sodales justo, id rhoncus metus vehicula vehicula. Morbi
           interdum, quam a sodales viverra, sapien est blandit risus,
@@ -24,7 +24,7 @@ function FlipCardFront() {
       </div>
       <div className="flip-card-front__answer">
         <h2>Notes/Answers</h2>
-        <p>
+        <p className="indent">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
           eleifend sodales justo, id rhoncus metus vehicula vehicula. Morbi
           interdum, quam a sodales viverra, sapien est blandit risus, nec tempus

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import DemoSlides from "./DemoSlides";
 import MainSlides from "./MainSlides";
 
@@ -34,14 +34,22 @@ function FlipCardImage() {
     <div className="container">
       <MainSlides />
 
-      <a className="prev" onClick={subtractSlideIndex}>
+      <a className="prev" onClick={subtractSlideIndex} href="#">
         &#10094;
       </a>
-      <a className="next" onClick={addSlideIndex}>
+      <a className="next" onClick={addSlideIndex} href="#">
         &#10095;
       </a>
 
       <div className="row">
+        <DemoSlides changeIndexTo={changeIndexTo} />
+        <DemoSlides changeIndexTo={changeIndexTo} />
+        <DemoSlides changeIndexTo={changeIndexTo} />
+        <DemoSlides changeIndexTo={changeIndexTo} />
+        <DemoSlides changeIndexTo={changeIndexTo} />
+        <DemoSlides changeIndexTo={changeIndexTo} />
+        <DemoSlides changeIndexTo={changeIndexTo} />
+        <DemoSlides changeIndexTo={changeIndexTo} />
         <DemoSlides changeIndexTo={changeIndexTo} />
         <DemoSlides changeIndexTo={changeIndexTo} />
       </div>

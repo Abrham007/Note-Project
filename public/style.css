@@ -7,7 +7,7 @@
 :root {
   --primary: #f44336;
   --secondary: #fab1a0;
-  --teritery: white;
+  --teritery: #f5f6fa;
 }
 
 body {
@@ -29,6 +29,9 @@ p {
   margin-top: 5px;
   font-size: 14px;
   line-height: 20px;
+}
+.indent {
+  text-indent: 35px;
 }
 
 img {
@@ -75,8 +78,8 @@ img {
   background-color: var(--primary);
   color: var(--teritery);
   border-radius: 15px;
-  padding: 20px;
-  text-align: left;
+
+  text-align: justify;
 }
 
 /* Style the front side (fallback if image is missing) */
@@ -84,6 +87,7 @@ img {
   display: flex;
   flex-direction: column;
   gap: 25px;
+  padding: 20px;
 }
 
 .flip-card-front__title {
@@ -103,12 +107,19 @@ img {
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  padding: 15px;
 }
 
 .flip-card-back__img {
-  width: 450px;
+  width: 460px;
   height: 650px;
   border-radius: 15px;
+}
+
+.flip-card-back__container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 
 /* <<<------------------------ InputCard Section ---------------------->>>*/
@@ -145,10 +156,23 @@ img {
   width: 80%;
 }
 
+.btn-dropdown {
+  position: relative;
+}
+
 .btn-group {
+  position: absolute;
+  top: -100px;
+  display: none;
+}
+
+.btn-dropdown:hover .btn-group {
   display: flex;
-  justify-content: space-around;
-  width: 80%;
+  flex-direction: column;
+}
+
+.btn-dropdown:hover .btn {
+  border-radius: 0;
 }
 
 .btn {
