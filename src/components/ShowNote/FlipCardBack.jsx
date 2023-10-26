@@ -9,10 +9,7 @@ function FlipCardBack(props) {
       </div>
       <div className="flip-card-back__container">
         <div>
-          <audio
-            style={{ border: "10px solid #fab1a0", borderRadius: "30px" }}
-            controls
-          >
+          <audio className="flip-card-back__audio" controls>
             <source
               src="C:\Users\abrha\Documents\Sound Recordings\blockchain intro 1.m4a"
               type="audio/mp4"

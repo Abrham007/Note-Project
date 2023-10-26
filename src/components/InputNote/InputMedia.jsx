@@ -3,7 +3,7 @@ import Button from "@mui/joy/Button";
 import PhotoLibraryOutlinedIcon from "@mui/icons-material/PhotoLibraryOutlined";
 import AudioFileOutlinedIcon from "@mui/icons-material/AudioFileOutlined";
 
-function InputMedia() {
+function InputMedia(props) {
   return (
     <div className="input-card__media">
       <Button
@@ -16,12 +16,14 @@ function InputMedia() {
       >
         Upload Image
         <input
+          onChange={(event) => props.addFiles(event)}
           style={{ display: "none" }}
           type="file"
           id="image"
-          name="image"
+          name="images"
           accept=".jpg, .jpeg, .png"
           multiple
+          value={props.noteImages}
         />
       </Button>
 
@@ -35,6 +37,7 @@ function InputMedia() {
       >
         Upload Audio
         <input
+          onChange={(event) => props.addFiles(event)}
           style={{ display: "none" }}
           type="file"
           id="audio"
@@ -42,6 +45,7 @@ function InputMedia() {
           accept=".mp4, .mp3, .mpeg,.m4a"
           capture="user"
           multiple
+          value={props.noteAudio}
         />
       </Button>
     </div>

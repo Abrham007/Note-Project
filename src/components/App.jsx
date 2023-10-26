@@ -10,7 +10,7 @@ function App() {
     event.preventDefault();
   }
 
-  return false ? (
+  return isInput ? (
     <InputCard showNote={showNote} />
   ) : (
     <FlipCard showNote={showNote} />
