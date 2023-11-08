@@ -1,21 +1,21 @@
 import express from "express";
 import mongoose from "mongoose";
+import bodyParser from "body-parser";
+import multer from "multer";
+var upload = multer();
 
 const port = 4000;
 const app = express();
 
-app.use(express.urlencoded({ extended: true }));
+// field names of the input's
+const cpUpload = upload.fields([
+  { name: "image" },
+  { name: "audio", maxCount: 1 },
+]);
 
-mongoose.connect("mongodb://0.0.0.0:27017/noteDb");
-const noteSchema = new mongoose.Schema({
-  title: String,
-  date: Date,
-  question: String,
-  answer: String,
-});
-
-app.get("/", (req, res) => {
-  res.send("hi");
+app.post("/", cpUpload, (req, res) => {
+  console.log(req.files, req.body);
+  res.send();
 });
 
 app.listen(port, () => {
