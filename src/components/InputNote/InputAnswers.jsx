@@ -5,13 +5,12 @@ function InputAnswer(props) {
   return (
     <div className="input-card__answer">
       <Textarea
-        onChange={(event) => props.addNote(event)}
+        {...props.register("answer", { required: true })}
         color="neutral"
         minRows={4}
         variant="outlined"
         placeholder="Notes/Answers"
         name="answer"
-        value={props.noteAnswer}
       />
     </div>
   );

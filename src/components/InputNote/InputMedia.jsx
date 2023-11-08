@@ -16,14 +16,13 @@ function InputMedia(props) {
       >
         Upload Image
         <input
-          onChange={(event) => props.addFiles(event)}
+          {...props.register("image", { required: true })}
           style={{ display: "none" }}
           type="file"
           id="image"
-          name="images"
+          name="image"
           accept=".jpg, .jpeg, .png"
           multiple
-          value={props.noteImages}
         />
       </Button>
 
@@ -37,15 +36,13 @@ function InputMedia(props) {
       >
         Upload Audio
         <input
-          onChange={(event) => props.addFiles(event)}
+          {...props.register("audio", { required: true })}
           style={{ display: "none" }}
           type="file"
           id="audio"
           name="audio"
           accept=".mp4, .mp3, .mpeg,.m4a"
           capture="user"
-          multiple
-          value={props.noteAudio}
         />
       </Button>
     </div>

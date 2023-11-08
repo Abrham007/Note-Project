@@ -1,51 +1,32 @@
 import React, { useState } from "react";
-
+import { useForm } from "react-hook-form";
 import InputTitle from "./InputTitle";
 import InputQuestion from "./InputQuestion";
 import InputMedia from "./InputMedia";
 import InputAnswer from "./InputAnswers";
 
 function InputCard(props) {
-  const [newNote, setNewNote] = useState({
-    title: "",
-    question: "",
-    images: null,
-    audio: null,
-    answer: "",
-  });
+  const { register, handleSubmit } = useForm();
 
-  function addNote(event) {
-    const { name, value } = event.target;
-    setNewNote((prevValue) => ({ ...prevValue, [name]: value }));
-  }
-
-  function addFiles(event) {
-    const { name, files } = event.target;
-    setNewNote((prevValue) => ({ ...prevValue, [name]: files }));
-  }
-
-  function createFormData() {
+  async function onSubmit(data) {
     const formData = new FormData();
-    for (const [key, value] of Object.entries(newNote)) {
-      if (key === "images") {
-        [...value].forEach((image) => {
-          formData.append("images", image);
-        });
+
+    for (let [key, value] of Object.entries(data)) {
+      if (key === "image") {
+        for (let i = 0; i < value.length; i++) {
+          formData.append(key, value[i]);
+        }
       } else if (key === "audio") {
-        [...value].forEach((audio) => {
-          formData.append("audio", audio);
-        });
+        formData.append(key, value[0]);
       } else {
         formData.append(key, value);
       }
     }
-    return formData;
-  }
 
-  async function sendFormData(formData) {
     try {
-      const response = await fetch("https://localhost:4000", {
+      const response = await fetch("http://localhost:4000", {
         method: "POST",
+        mode: "no-cors",
         body: formData,
       });
     } catch (error) {
@@ -53,31 +34,15 @@ function InputCard(props) {
     }
   }
 
-  function submitNote(event) {
-    event.preventDefault();
-    let formData = createFormData();
-    sendFormData(formData);
-    setNewNote({
-      title: "",
-      question: "",
-      images: null,
-      audio: null,
-      answer: "",
-    });
-  }
   return (
-    <form onSubmit={(event) => submitNote(event)} enctype="multipart/form-data">
+    <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
       <div className="input-card">
         <h1>Notes</h1>
 
-        <InputTitle addNote={addNote} noteTitle={newNote.title} />
-        <InputQuestion addNote={addNote} noteQuestion={newNote.question} />
-        <InputMedia
-          addFiles={addFiles}
-          noteImages={newNote.images}
-          noteAudio={newNote.audio}
-        />
-        <InputAnswer addNote={addNote} noteAnswer={newNote.answer} />
+        <InputTitle register={register} />
+        <InputQuestion register={register} />
+        <InputMedia register={register} />
+        <InputAnswer register={register} />
 
         <div className="input-card__btn-group">
           <button type="submit" className="btn">
