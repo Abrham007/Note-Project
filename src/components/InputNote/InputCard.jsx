@@ -26,7 +26,6 @@ function InputCard(props) {
     try {
       const response = await fetch("http://localhost:4000", {
         method: "POST",
-        mode: "no-cors",
         body: formData,
       });
     } catch (error) {
