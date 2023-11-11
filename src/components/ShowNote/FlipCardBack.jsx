@@ -3,7 +3,7 @@ import FlipCardImage from "./FlipCardImage";
 
 function FlipCardBack(props) {
   return (
-    <div class="flip-card-back">
+    <div className="flip-card-back">
       <div className="flip-card-back__img">
         <FlipCardImage />
       </div>
