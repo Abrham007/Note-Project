@@ -11,7 +11,7 @@ let notes = [];
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "http://127.0.0.1:3001",
   })
 );
 app.use(bodyParser.json());
@@ -30,9 +30,9 @@ const cpUpload = upload.fields([
 
 app.post("/", cpUpload, (req, res) => {
   let imgBlobArray = req.files.image.map(
-    (image) => new Uint8Array(image.buffer)
+    (image) => new Blob([image.buffer], { type: "image/png" })
   );
-  let audioBlob = new Uint8Array(req.files.audio[0].buffer);
+  let audioBlob = new Blob([req.files.audio[0].buffer], { type: "audio/mp4" });
   let todayDate = new Date().toLocaleDateString();
   let newNote = {
     title: req.body.title,
