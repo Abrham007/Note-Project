@@ -6,7 +6,7 @@ function DemoSlides(props) {
       <div className="column">
         <img
           className="demo cursor"
-          src="https://picsum.photos/100/100"
+          src=""
           alt="The Woods"
           onClick={() => props.changeIndexTo(1)}
         ></img>
