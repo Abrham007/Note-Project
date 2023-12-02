@@ -47,11 +47,7 @@ function InputCard(props) {
           <button type="submit" className="btn">
             Submit
           </button>
-          <button
-            type="button"
-            className="btn"
-            onClick={(event) => props.showNote(event)}
-          >
+          <button className="btn" onClick={(event) => props.showNote(event)}>
             Show
           </button>
         </div>
