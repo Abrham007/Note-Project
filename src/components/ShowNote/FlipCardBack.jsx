@@ -2,18 +2,21 @@ import React from "react";
 import FlipCardImage from "./FlipCardImage";
 
 function FlipCardBack(props) {
+  console.log(typeof props.audio);
+  let audioArray = new Uint8Array(props.audio);
+  let audioBlob = new Blob([props.audio.buffer], { type: "audio/mp4" });
+  console.log(typeof audioBlob);
+  let audio = URL.createObjectURL(audioBlob);
+
   return (
     <div className="flip-card-back">
       <div className="flip-card-back__img">
-        <FlipCardImage />
+        <FlipCardImage images={props.images} />
       </div>
       <div className="flip-card-back__container">
         <div>
           <audio className="flip-card-back__audio" controls>
-            <source
-              src="C:\Users\abrha\Documents\Sound Recordings\blockchain intro 1.m4a"
-              type="audio/mp4"
-            ></source>
+            <source src={audio} type="audio/mp4"></source>
           </audio>
         </div>
         <div className="btn-dropdown">

@@ -12,7 +12,11 @@ function FlipCard(props) {
           answer={props.note.answer}
           date={props.note.date}
         />
-        <FlipCardBack showNote={props.showNote} />
+        <FlipCardBack
+          audio={props.note.audio}
+          images={props.note.images}
+          showNote={props.showNote}
+        />
       </div>
     </div>
   );

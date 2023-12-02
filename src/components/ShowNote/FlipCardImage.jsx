@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import DemoSlides from "./DemoSlides";
 import MainSlides from "./MainSlides";
 
-function FlipCardImage() {
+function FlipCardImage(props) {
   const [slideIndex, setSlideIndex] = useState(1);
   useEffect(() => {
     let i;
@@ -32,7 +32,9 @@ function FlipCardImage() {
 
   return (
     <div className="container">
-      <MainSlides />
+      {props.images.map((image, index) => (
+        <MainSlides image={image} index={index} key={index} />
+      ))}
 
       <a className="prev" onClick={subtractSlideIndex} href="#">
         &#10094;
@@ -42,12 +44,6 @@ function FlipCardImage() {
       </a>
 
       <div className="row">
-        <DemoSlides changeIndexTo={changeIndexTo} />
-        <DemoSlides changeIndexTo={changeIndexTo} />
-        <DemoSlides changeIndexTo={changeIndexTo} />
-        <DemoSlides changeIndexTo={changeIndexTo} />
-        <DemoSlides changeIndexTo={changeIndexTo} />
-        <DemoSlides changeIndexTo={changeIndexTo} />
         <DemoSlides changeIndexTo={changeIndexTo} />
         <DemoSlides changeIndexTo={changeIndexTo} />
         <DemoSlides changeIndexTo={changeIndexTo} />
