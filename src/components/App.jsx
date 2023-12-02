@@ -5,18 +5,22 @@ import FlipCard from "./ShowNote/FlipCard";
 function App() {
   const [isInput, setIsInput] = useState(true);
   const [notes, setNotes] = useState([]);
+  const [url, setUrl] = useState();
 
-  function showNote(event) {
-    setIsInput((prevValue) => !prevValue);
+  async function showNote(event) {
     event.preventDefault();
-    fetchNote();
+    fetchNote().then(() => {
+      setIsInput((prevValue) => !prevValue);
+    });
   }
 
   async function fetchNote() {
     try {
       let response = await fetch("http://localhost:4000");
-      let notesArray = await response.json();
-      setNotes(notesArray);
+      response.json().then((notesArray) => {
+        console.log(notesArray);
+        setNotes(notesArray);
+      });
     } catch (error) {
       console.log(error);
     }
@@ -25,7 +29,9 @@ function App() {
   return isInput ? (
     <InputCard showNote={showNote} />
   ) : (
-    notes.map((note) => <FlipCard note={note} showNote={showNote} />)
+    notes.map((note, index) => (
+      <FlipCard key={index} note={note} showNote={showNote} />
+    ))
   );
 }
 
