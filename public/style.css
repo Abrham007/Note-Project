@@ -152,6 +152,24 @@ img {
   border-radius: 30px;
 }
 
+.audio-box {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.audio-btn {
+  height: 50px;
+  border-radius: 999px;
+  background-color: var(--teritery);
+  border: 5px solid var(--secondary);
+}
+
+.audio-btn:hover {
+  cursor: pointer;
+}
+
 /* <<<------------------------ InputCard Section ---------------------->>>*/
 .input-card {
   display: flex;
