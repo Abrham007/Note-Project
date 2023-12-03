@@ -17,8 +17,41 @@ app.use(
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-  console.log("recived");
+  console.log("recived text request");
   res.json(notes);
+});
+
+app.get("/audio/:id", (req, res) => {
+  console.log("recived audio request");
+  const id = req.params.id;
+  res.set("Content-Type", "application/octet-stream");
+  notes[id].audio.arrayBuffer().then((buffer) => {
+    res.send(Buffer.from(buffer));
+  });
+});
+
+app.get("/images/:id", (req, res) => {
+  console.log("recived images request");
+  const id = req.params.id;
+  res.set("Content-Type", "application/octet-stream");
+  notes[id].images[0].arrayBuffer().then((buffer) => {
+    res.send(Buffer.from(buffer));
+  });
+  // res.set("Content-Type", "application/json");
+  // let list = [];
+  // let noteImg = notes[id].images;
+
+  // for (let i = 0; i < noteImg.length; i++) {
+  //   noteImg[i].arrayBuffer().then((imgArrayBuffer) => {
+  //     let imgBuffer = Buffer.from(imgArrayBuffer);
+  //     list.push(imgBuffer);
+
+  //     if (list.length === noteImg.length) {
+  //       console.log(list);
+  //       res.json(list);
+  //     }
+  //   });
+  // }
 });
 
 // field names of the input's
