@@ -30,7 +30,7 @@ function App() {
     <InputCard showNote={showNote} />
   ) : (
     notes.map((note, index) => (
-      <FlipCard key={index} note={note} showNote={showNote} />
+      <FlipCard key={index} id={index} note={note} showNote={showNote} />
     ))
   );
 }
