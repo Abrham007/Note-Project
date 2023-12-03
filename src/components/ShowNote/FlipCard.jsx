@@ -13,6 +13,7 @@ function FlipCard(props) {
           date={props.note.date}
         />
         <FlipCardBack
+          id={props.id}
           audio={props.note.audio}
           images={props.note.images}
           showNote={props.showNote}
