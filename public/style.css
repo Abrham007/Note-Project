@@ -152,14 +152,14 @@ img {
   border-radius: 30px;
 }
 
-.audio-box {
+/* .audio-box {
   display: flex;
   justify-content: center;
   gap: 10px;
   width: 100%;
-}
+} */
 
-.audio-btn {
+/* .audio-btn {
   height: 50px;
   border-radius: 999px;
   background-color: var(--teritery);
@@ -168,7 +168,7 @@ img {
 
 .audio-btn:hover {
   cursor: pointer;
-}
+} */
 
 /* <<<------------------------ InputCard Section ---------------------->>>*/
 .input-card {
@@ -229,7 +229,7 @@ img {
   }
 }
 
-.btn-dropdown {
+/* .btn-dropdown {
   position: relative;
 }
 
@@ -246,9 +246,17 @@ img {
 
 .btn-dropdown:hover .btn {
   border-radius: 0;
+} */
+
+.btn-group {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
 
-.btn {
+.btn--primary {
   width: 100px;
   height: 50px;
   background-color: var(--secondary);
@@ -258,10 +266,27 @@ img {
   font-size: 16px;
 }
 
-.btn:hover {
+.btn--primary:hover {
   cursor: pointer;
   background-color: var(--teritery);
   color: var(--secondary);
+}
+
+.btn--secondary {
+  width: 50px;
+  height: 50px;
+  border-radius: 30px;
+  background-color: var(--teritery);
+  border: none;
+}
+.btn--secondary:hover {
+  cursor: pointer;
+  border: 3px solid var(--secondary);
+  outline: 3px solid var(--teritery);
+}
+
+.btn--secondary:active {
+  border: 6px solid var(--secondary);
 }
 
 /* <<<------------------------ Image Component ---------------------->>>*/
