@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import pg from "pg";
 import bodyParser from "body-parser";
 import multer from "multer";
 import cors from "cors";
@@ -33,25 +34,20 @@ app.get("/audio/:id", (req, res) => {
 app.get("/images/:id", (req, res) => {
   console.log("recived images request");
   const id = req.params.id;
-  res.set("Content-Type", "application/octet-stream");
-  notes[id].images[0].arrayBuffer().then((buffer) => {
-    res.send(Buffer.from(buffer));
-  });
-  // res.set("Content-Type", "application/json");
-  // let list = [];
-  // let noteImg = notes[id].images;
+  res.set("Content-Type", "application/json");
+  let list = [];
+  let noteImg = notes[id].images;
 
-  // for (let i = 0; i < noteImg.length; i++) {
-  //   noteImg[i].arrayBuffer().then((imgArrayBuffer) => {
-  //     let imgBuffer = Buffer.from(imgArrayBuffer);
-  //     list.push(imgBuffer);
+  for (let i = 0; i < noteImg.length; i++) {
+    noteImg[i].arrayBuffer().then((imgArrayBuffer) => {
+      let imgBuffer = Buffer.from(imgArrayBuffer);
+      list.push(imgBuffer);
 
-  //     if (list.length === noteImg.length) {
-  //       console.log(list);
-  //       res.json(list);
-  //     }
-  //   });
-  // }
+      if (list.length === noteImg.length) {
+        res.json(list);
+      }
+    });
+  }
 });
 
 // field names of the input's
