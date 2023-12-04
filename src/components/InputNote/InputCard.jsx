@@ -44,10 +44,13 @@ function InputCard(props) {
         <InputAnswer register={register} />
 
         <div className="input-card__btn-group">
-          <button type="submit" className="btn">
+          <button type="submit" className="btn--primary">
             Submit
           </button>
-          <button className="btn" onClick={(event) => props.showNote(event)}>
+          <button
+            className="btn--primary"
+            onClick={(event) => props.showNote(event)}
+          >
             Show
           </button>
         </div>
