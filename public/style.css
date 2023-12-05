@@ -101,12 +101,16 @@ img {
   flex-direction: column;
   gap: 25px;
   padding: 20px;
+  word-spacing: 0.25rem;
 }
 
 .flip-card-front__title {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.flip-card-front__question {
 }
 
 .flip-card-front__answer {
