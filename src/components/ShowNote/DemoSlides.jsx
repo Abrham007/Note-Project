@@ -9,8 +9,8 @@ function DemoSlides(props) {
           src={props.image}
           alt="The Woods"
           onClick={() => props.changeIndexTo(props.index + 1)}
-          height={80}
-          width={80}
+          height={85}
+          width={85}
         ></img>
       </div>
     </div>
