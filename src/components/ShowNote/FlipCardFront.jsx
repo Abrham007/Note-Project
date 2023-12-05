@@ -14,14 +14,14 @@ function FlipCardFront(props) {
           <p>{props.date}</p>
         </div>
       </div>
-      <div>
+      <div className="flip-card-front__question">
         <h2>Questions/Keywords</h2>
         <p className="indent">{props.question}</p>
       </div>
       <div className="flip-card-front__answer">
         <h2>Notes/Answers</h2>
         <p className="indent" tabIndex={1}>
-          {props.answer}
+          {props.notes}
         </p>
       </div>
     </div>
