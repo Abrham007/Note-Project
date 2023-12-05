@@ -4,6 +4,7 @@ import pg from "pg";
 import bodyParser from "body-parser";
 import multer from "multer";
 import cors from "cors";
+import sqlite3 from "sqlite3";
 var upload = multer();
 
 const port = 4000;
@@ -12,42 +13,55 @@ let notes = [];
 
 app.use(
   cors({
-    origin: "http://127.0.0.1:3001",
+    origin: "http://127.0.0.1:3000",
   })
 );
 app.use(bodyParser.json());
+
+// open the database
+let db = new sqlite3.Database(
+  "./db/Notes.db",
+  sqlite3.OPEN_READWRITE,
+  (err) => {
+    if (err) {
+      console.error(err.message);
+    }
+    console.log("Connected to the Notes database.");
+  }
+);
+
+db.serialize(() => {
+  db.all(`SELECT * FROM notes ORDER BY id DESC LIMIT (6)`, (err, rows) => {
+    if (err) {
+      console.error(err.message);
+    }
+    notes = rows;
+  });
+});
 
 app.get("/", (req, res) => {
   console.log("recived text request");
   res.json(notes);
 });
 
-app.get("/audio/:id", (req, res) => {
-  console.log("recived audio request");
-  const id = req.params.id;
-  res.set("Content-Type", "application/octet-stream");
-  notes[id].audio.arrayBuffer().then((buffer) => {
-    res.send(Buffer.from(buffer));
-  });
-});
-
 app.get("/images/:id", (req, res) => {
   console.log("recived images request");
   const id = req.params.id;
   res.set("Content-Type", "application/json");
-  let list = [];
-  let noteImg = notes[id].images;
 
-  for (let i = 0; i < noteImg.length; i++) {
-    noteImg[i].arrayBuffer().then((imgArrayBuffer) => {
-      let imgBuffer = Buffer.from(imgArrayBuffer);
-      list.push(imgBuffer);
-
-      if (list.length === noteImg.length) {
-        res.json(list);
+  db.serialize(() => {
+    db.all(
+      `SELECT photo FROM img WHERE note_id = ? ORDER BY id DESC`,
+      [id],
+      (err, rows) => {
+        if (err) {
+          console.error(err.message);
+        }
+        let imgList = rows.map((row) => row.photo);
+        res.json(imgList);
       }
-    });
-  }
+    );
+  });
 });
 
 // field names of the input's
@@ -66,14 +80,13 @@ app.post("/", cpUpload, (req, res) => {
   let newNote = {
     title: req.body.title,
     question: req.body.question,
-    answer: req.body.answer,
+    notes: req.body.answer,
     date: todayDate,
     images: imgBlobArray,
     audio: audioBlob,
   };
 
-  notes.push(newNote);
-  console.log(notes);
+  console.log(newNote);
   res.sendStatus(200);
 });
 
