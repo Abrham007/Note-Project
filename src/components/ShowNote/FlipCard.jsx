@@ -9,13 +9,13 @@ function FlipCard(props) {
         <FlipCardFront
           title={props.note.title}
           question={props.note.question}
-          answer={props.note.answer}
+          notes={props.note.notes}
           date={props.note.date}
         />
         <FlipCardBack
-          id={props.id}
+          id={props.note.id}
           audio={props.note.audio}
-          images={props.note.images}
+          image={props.note.image}
           showNote={props.showNote}
         />
       </div>
