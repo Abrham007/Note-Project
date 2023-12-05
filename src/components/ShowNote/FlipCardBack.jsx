@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FlipCardImage from "./FlipCardImage";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -12,14 +12,13 @@ function FlipCardBack(props) {
   const [flipCardAudio, setFlipCardAudio] = useState();
   const [isAuto, setIsAuto] = useState(false);
   const [duration, setDuration] = useState();
+  const autoBtn = useRef(null);
 
   async function fetchMedia() {
     try {
-      let responseAudio = await fetch(
-        `http://localhost:4000/audio/${props.id}`
-      );
-      let audioBuffer = await responseAudio.blob();
-      let audio = URL.createObjectURL(audioBuffer);
+      let audioArray = new Uint8Array(props.audio.data);
+      let audioBlob = new Blob([audioArray.buffer], { type: "audio/mp4" });
+      let audio = URL.createObjectURL(audioBlob);
       let noteAudio = new Audio(audio);
       setNoteAudio(noteAudio);
       setFlipCardAudio(
@@ -27,22 +26,33 @@ function FlipCardBack(props) {
           <source src={audio}></source>
         </audio>
       );
-
-      let responseImg = await fetch(`http://localhost:4000/images/${props.id}`);
-      let imgBufferList = await responseImg.json();
-      let imgURLList = imgBufferList.map((imgBuffer) => {
-        let imgArray = new Uint8Array(imgBuffer.data);
+      if (!props.image) {
+        let responseImg = await fetch(
+          `http://localhost:4000/images/${props.id}`
+        );
+        let imgBufferList = await responseImg.json();
+        let imgURLList = imgBufferList.map((imgBuffer) => {
+          let imgArray = new Uint8Array(imgBuffer.data);
+          let imgBlob = new Blob([imgArray.buffer], { type: "image/png" });
+          return URL.createObjectURL(imgBlob);
+        });
+        setImgList(imgURLList);
+        setFlipCardImage(
+          <FlipCardImage
+            images={imgURLList}
+            isAuto={isAuto}
+            duration={duration}
+          />
+        );
+      } else {
+        let imgArray = new Uint8Array(props.image.data);
         let imgBlob = new Blob([imgArray.buffer], { type: "image/png" });
-        return URL.createObjectURL(imgBlob);
-      });
-      setImgList(imgURLList);
-      setFlipCardImage(
-        <FlipCardImage
-          images={imgURLList}
-          isAuto={isAuto}
-          duration={duration}
-        />
-      );
+        let image = URL.createObjectURL(imgBlob);
+        setImgList([image]);
+        setFlipCardImage(
+          <FlipCardImage images={[image]} isAuto={isAuto} duration={duration} />
+        );
+      }
     } catch (error) {
       console.log(error);
     }
@@ -50,7 +60,9 @@ function FlipCardBack(props) {
 
   function playAudio() {
     noteAudio.play();
-    noteAudio.addEventListener("ended", toggleAuto);
+    noteAudio.addEventListener("ended", (e) => {
+      autoBtn.current.click();
+    });
   }
   function pauseAudio() {
     noteAudio.pause();
@@ -100,7 +112,7 @@ function FlipCardBack(props) {
           <button className="btn--secondary">
             <DeleteIcon></DeleteIcon>
           </button>
-          <button className="btn--secondary" onClick={toggleAuto}>
+          <button className="btn--secondary" ref={autoBtn} onClick={toggleAuto}>
             {isAuto ? (
               <HourglassTopIcon></HourglassTopIcon>
             ) : (
