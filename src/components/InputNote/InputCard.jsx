@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import InputTitle from "./InputTitle";
 import InputQuestion from "./InputQuestion";
@@ -6,7 +6,8 @@ import InputMedia from "./InputMedia";
 import InputAnswer from "./InputAnswers";
 
 function InputCard(props) {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
+  const [isSubmited, setIsSubmited] = useState(false);
 
   async function onSubmit(data) {
     const formData = new FormData();
@@ -30,8 +31,16 @@ function InputCard(props) {
       });
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsSubmited(true);
     }
   }
+
+  useEffect(() => {
+    if (isSubmited) {
+      reset();
+    }
+  }, [isSubmited]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
