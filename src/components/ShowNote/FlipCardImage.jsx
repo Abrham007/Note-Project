@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import DemoSlides from "./DemoSlides";
 import MainSlides from "./MainSlides";
 
 function FlipCardImage(props) {
   const [slideIndex, setSlideIndex] = useState(1);
-  const [autoFuncState, setAutoFuncState] = useState();
+  const demoRows = useRef(null);
+  const autoFunc = useRef(null);
+
   useEffect(() => {
     let i;
     let slides = document.getElementsByClassName("mySlides");
@@ -18,6 +20,14 @@ function FlipCardImage(props) {
     }
     slides[slideIndex - 1].style.display = "block";
     dots[slideIndex - 1].className += " active";
+
+    if (slideIndex % 5 === 0) {
+      demoRows.current.scrollBy(350, 0);
+    }
+
+    if (slideIndex === 1) {
+      demoRows.current.scrollTo(0, 0);
+    }
   }, [slideIndex]);
 
   function addSlideIndex() {
@@ -38,25 +48,23 @@ function FlipCardImage(props) {
     setSlideIndex(n);
   }
 
-  let autoFunc;
+  const imgLength = props.images.length;
+  const interval = props.duration / imgLength;
+
   useEffect(() => {
     if (props.isAuto) {
-      let interval = props.duration / props.images.length;
-
-      autoFunc = setInterval(() => {
+      autoFunc.current = setInterval(() => {
         setSlideIndex((preValue) => {
-          if (preValue !== props.images.length) {
+          if (preValue !== imgLength) {
             return preValue + 1;
           } else {
             return 1;
           }
         });
       }, interval * 1000);
-      setAutoFuncState(autoFunc);
     } else {
-      clearInterval(autoFuncState);
-      setAutoFuncState();
-      autoFunc = null;
+      clearInterval(autoFunc.current);
+      autoFunc.current = null;
     }
   }, [props.isAuto]);
 
@@ -78,7 +86,7 @@ function FlipCardImage(props) {
         &#10095;
       </a>
 
-      <div className="row">
+      <div className="row" ref={demoRows}>
         {props.images.map((image, index) => (
           <DemoSlides
             changeIndexTo={changeIndexTo}
