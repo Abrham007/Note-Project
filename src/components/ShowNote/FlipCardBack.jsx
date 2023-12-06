@@ -4,28 +4,51 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BackHandIcon from "@mui/icons-material/BackHand";
 import HourglassTopIcon from "@mui/icons-material/HourglassTop";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
+import StopIcon from "@mui/icons-material/Stop";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 function FlipCardBack(props) {
   const [noteAudio, setNoteAudio] = useState();
   const [imgList, setImgList] = useState();
   const [flipCardImage, setFlipCardImage] = useState();
-  const [flipCardAudio, setFlipCardAudio] = useState();
+  // const [flipCardAudio, setFlipCardAudio] = useState();
   const [isAuto, setIsAuto] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState();
-  const autoBtn = useRef(null);
+  const [audioTime, setAudioTime] = useState("");
+  const [audioFullTime, setAudioFullTime] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  async function fetchMedia() {
+  const autoBtn = useRef(null);
+  const playBtn = useRef(null);
+
+  function handleAudio() {
+    let audioArray = new Uint8Array(props.audio.data);
+    let audioBlob = new Blob([audioArray.buffer], { type: "audio/mp4" });
+    let audio = URL.createObjectURL(audioBlob);
+    let noteAudio = new Audio(audio);
+    setNoteAudio(noteAudio);
+
+    noteAudio.addEventListener("loadeddata", function getAudioTime() {
+      // The duration variable now holds the duration (in seconds) of the audio clip
+      const minutes = Math.floor(noteAudio.duration / 60);
+      const seconds = Math.floor(noteAudio.duration - minutes * 60);
+      const minuteValue = minutes < 10 ? `0${minutes}` : minutes;
+      const secondValue = seconds < 10 ? `0${seconds}` : seconds;
+
+      const mediaTime = `${minuteValue}:${secondValue}`;
+      setAudioTime(mediaTime);
+      setAudioFullTime(mediaTime);
+
+      noteAudio.removeEventListener("loadeddata", getAudioTime);
+    });
+  }
+
+  async function fetchImage() {
     try {
-      let audioArray = new Uint8Array(props.audio.data);
-      let audioBlob = new Blob([audioArray.buffer], { type: "audio/mp4" });
-      let audio = URL.createObjectURL(audioBlob);
-      let noteAudio = new Audio(audio);
-      setNoteAudio(noteAudio);
-      setFlipCardAudio(
-        <audio className="flip-card-back__audio" controls>
-          <source src={audio}></source>
-        </audio>
-      );
       if (!props.image) {
         let responseImg = await fetch(
           `http://localhost:4000/images/${props.id}`
@@ -58,19 +81,47 @@ function FlipCardBack(props) {
     }
   }
 
+  function handleEnd(e) {
+    if (autoBtn) {
+      autoBtn.current.click();
+      autoBtn = null;
+    }
+
+    if (playBtn) {
+      playBtn.current.click();
+      playBtn = null;
+    }
+  }
+
+  function updateTime() {
+    const interval = noteAudio.duration - noteAudio.currentTime;
+    const minutes = Math.floor(interval / 60);
+    const seconds = Math.floor(interval - minutes * 60);
+    const minuteValue = minutes < 10 ? `0${minutes}` : minutes;
+    const secondValue = seconds < 10 ? `0${seconds}` : seconds;
+
+    const mediaTime = `${minuteValue}:${secondValue}`;
+    setAudioTime(mediaTime);
+  }
+
   function playAudio() {
     noteAudio.play();
-    noteAudio.addEventListener("ended", (e) => {
-      autoBtn.current.click();
-    });
+    noteAudio.addEventListener("ended", handleEnd);
+    setIsPlaying(true);
+    noteAudio.addEventListener("timeupdate", updateTime);
   }
   function pauseAudio() {
     noteAudio.pause();
+    setIsPlaying(false);
   }
 
   function stopAudio() {
     noteAudio.pause();
     noteAudio.currentTime = 0;
+    noteAudio.removeEventListener("ended", handleEnd);
+    noteAudio.removeEventListener("timeupdate", updateTime);
+    setAudioTime(audioFullTime);
+    setIsPlaying(false);
   }
 
   function toggleAuto() {
@@ -85,8 +136,24 @@ function FlipCardBack(props) {
     }
   }
 
+  function goUp() {
+    window.scrollBy(0, -window.innerHeight);
+  }
+
+  function goDown() {
+    window.scrollBy(0, window.innerHeight);
+  }
+
+  async function handleDeleteNote() {
+    setIsDeleting(true);
+    props.deleteNote(props.id).then(() => {
+      setIsDeleting(false);
+    });
+  }
+
   useEffect(() => {
-    fetchMedia();
+    fetchImage();
+    handleAudio();
   }, []);
 
   useEffect(() => {
@@ -101,23 +168,59 @@ function FlipCardBack(props) {
     <div className="flip-card-back">
       <div className="flip-card-back__img">{flipCardImage}</div>
       <div className="flip-card-back__container">
-        <div className="audio-box">{flipCardAudio}</div>
+        {/* <div className="audio-box">{flipCardAudio}</div> */}
         <div className="btn-group">
-          <button
-            className="btn--secondary"
-            onClick={(event) => props.showNote(event)}
+          <div
+            className="audio-time"
+            style={{
+              border: isPlaying ? "6px solid #a29bfe" : "none",
+            }}
           >
+            {audioTime}
+          </div>
+
+          <button
+            className="btn"
+            onClick={isPlaying ? pauseAudio : playAudio}
+            ref={playBtn}
+          >
+            {isPlaying ? (
+              <PauseIcon></PauseIcon>
+            ) : (
+              <PlayArrowIcon></PlayArrowIcon>
+            )}
+          </button>
+          <button className="btn" onClick={stopAudio}>
+            <StopIcon></StopIcon>
+          </button>
+          <button className="btn" onClick={(event) => props.showNote(event)}>
             <AddIcon></AddIcon>
           </button>
-          <button className="btn--secondary">
+          <button
+            className="btn"
+            style={props.isLoading ? { border: "none", outline: "none" } : {}}
+            onClick={handleDeleteNote}
+          >
+            <div
+              className="loader"
+              style={{
+                display: isDeleting ? "block" : "none",
+              }}
+            ></div>
             <DeleteIcon></DeleteIcon>
           </button>
-          <button className="btn--secondary" ref={autoBtn} onClick={toggleAuto}>
+          <button className="btn" ref={autoBtn} onClick={toggleAuto}>
             {isAuto ? (
               <HourglassTopIcon></HourglassTopIcon>
             ) : (
               <BackHandIcon></BackHandIcon>
             )}
+          </button>
+          <button className="btn" onClick={goUp}>
+            <ArrowUpwardIcon></ArrowUpwardIcon>
+          </button>
+          <button className="btn" onClick={goDown}>
+            <ArrowDownwardIcon></ArrowDownwardIcon>
           </button>
         </div>
       </div>
