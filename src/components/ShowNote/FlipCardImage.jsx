@@ -8,19 +8,6 @@ function FlipCardImage(props) {
   const autoFunc = useRef(null);
 
   useEffect(() => {
-    let i;
-    let slides = document.getElementsByClassName("mySlides");
-    let dots = document.getElementsByClassName("demo");
-
-    for (i = 0; i < slides.length; i++) {
-      slides[i].style.display = "none";
-    }
-    for (i = 0; i < dots.length; i++) {
-      dots[i].className = dots[i].className.replace(" active", "");
-    }
-    slides[slideIndex - 1].style.display = "block";
-    dots[slideIndex - 1].className += " active";
-
     if (slideIndex % 5 === 0) {
       demoRows.current.scrollBy(350, 0);
     }
@@ -76,6 +63,7 @@ function FlipCardImage(props) {
           index={index}
           imageList={imageList}
           key={index}
+          slideIndex={slideIndex}
         />
       ))}
 
@@ -93,6 +81,7 @@ function FlipCardImage(props) {
             image={image}
             index={index}
             key={index}
+            slideIndex={slideIndex}
           />
         ))}
       </div>
