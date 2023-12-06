@@ -5,13 +5,26 @@ import FlipCard from "./ShowNote/FlipCard";
 function App() {
   const [isInput, setIsInput] = useState(true);
   const [notes, setNotes] = useState([]);
-  const [url, setUrl] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   async function showNote(event) {
+    setIsLoading(true);
     event.preventDefault();
     fetchNote().then(() => {
+      setIsLoading(false);
       setIsInput((prevValue) => !prevValue);
     });
+  }
+
+  async function deleteNote(id) {
+    try {
+      const response = await fetch(`http://localhost:4000/${id}`, {
+        method: "DELETE",
+      });
+      await fetchNote();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async function fetchNote() {
@@ -19,7 +32,16 @@ function App() {
       let response = await fetch("http://localhost:4000");
       response.json().then((notesArray) => {
         console.log(notesArray);
-        setNotes(notesArray);
+        setNotes(
+          notesArray.map((note, index) => (
+            <FlipCard
+              key={note.id}
+              note={note}
+              showNote={showNote}
+              deleteNote={deleteNote}
+            />
+          ))
+        );
       });
     } catch (error) {
       console.log(error);
@@ -27,11 +49,9 @@ function App() {
   }
 
   return isInput ? (
-    <InputCard showNote={showNote} />
+    <InputCard showNote={showNote} isLoading={isLoading} />
   ) : (
-    notes.map((note, index) => (
-      <FlipCard key={note.id} note={note} showNote={showNote} />
-    ))
+    notes
   );
 }
 
