@@ -5,7 +5,11 @@ function DemoSlides(props) {
     <div>
       <div className="column">
         <img
-          className="demo cursor"
+          className={
+            props.slideIndex - 1 === props.index
+              ? "demo cursor active"
+              : "demo cursor"
+          }
           src={props.image}
           alt="The Woods"
           onClick={() => props.changeIndexTo(props.index + 1)}
