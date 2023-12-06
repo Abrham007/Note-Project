@@ -17,6 +17,7 @@ function FlipCard(props) {
           audio={props.note.audio}
           image={props.note.image}
           showNote={props.showNote}
+          deleteNote={props.deleteNote}
         />
       </div>
     </div>
