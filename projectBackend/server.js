@@ -30,18 +30,18 @@ let db = new sqlite3.Database(
   }
 );
 
-db.serialize(() => {
-  db.all(`SELECT * FROM notes ORDER BY id DESC LIMIT (6)`, (err, rows) => {
-    if (err) {
-      console.error(err.message);
-    }
-    notes = rows;
-  });
-});
-
 app.get("/", (req, res) => {
   console.log("recived text request");
-  res.json(notes);
+
+  db.serialize(() => {
+    db.all(`SELECT * FROM notes ORDER BY id DESC LIMIT (6)`, (err, rows) => {
+      if (err) {
+        console.error(err.message);
+      }
+      notes = rows;
+      res.json(notes);
+    });
+  });
 });
 
 app.get("/images/:id", (req, res) => {
@@ -71,23 +71,82 @@ const cpUpload = upload.fields([
   { name: "audio", maxCount: 1 },
 ]);
 
-app.post("/", cpUpload, (req, res) => {
-  let imgBlobArray = req.files.image.map(
-    (image) => new Blob([image.buffer], { type: "image/png" })
-  );
+app.post("/", cpUpload, async (req, res) => {
   let audioBlob = new Blob([req.files.audio[0].buffer], { type: "audio/mp4" });
-  let todayDate = new Date().toLocaleDateString();
-  let newNote = {
-    title: req.body.title,
-    question: req.body.question,
-    notes: req.body.answer,
-    date: todayDate,
-    images: imgBlobArray,
-    audio: audioBlob,
-  };
+  let audioBuffer = Buffer.from(await audioBlob.arrayBuffer());
+  let todayDate = new Date().toLocaleString();
 
-  console.log(newNote);
+  db.run(
+    `INSERT INTO notes(title, date, question, notes, audio, module, referance ) VALUES(?, ?, ?, ?, ?, ?, ?)`,
+    [
+      req.body.title,
+      todayDate,
+      req.body.question,
+      req.body.answer,
+      audioBuffer,
+      req.body.module,
+      req.body.referance,
+    ],
+    async function (err) {
+      if (err) {
+        return console.log(err.message);
+      }
+      // get the last insert id
+      console.log(
+        `A row has been inserted in notes table with rowid ${this.lastID}`
+      );
+      let newNoteId = this.lastID;
+
+      req.files.image.forEach((image) => {
+        let imageBlob = new Blob([image.buffer], { type: "image/png" });
+        imageBlob.arrayBuffer().then((imgArray) => {
+          let imageBuffer = Buffer.from(imgArray);
+
+          db.run(
+            `INSERT INTO img(photo, note_id) VALUES(?, ?)`,
+            [imageBuffer, newNoteId],
+            function (err) {
+              if (err) {
+                return console.log(err.message);
+              }
+              // get the last insert id
+              console.log(
+                `A row has been inserted in img table with rowid ${this.change}`
+              );
+            }
+          );
+        });
+      });
+    }
+  );
+
   res.sendStatus(200);
+});
+
+app.delete("/:id", (req, res) => {
+  let noteId = req.params.id;
+  console.log(noteId);
+
+  db.run(`DELETE FROM notes WHERE id = ?`, [noteId], function (err) {
+    if (err) {
+      return console.log(err.message);
+    }
+    // get the last insert id
+    console.log(
+      `A row has been deleted in notes table with rowid ${this.lastID}`
+    );
+  });
+
+  db.run(`DELETE FROM img WHERE note_id = ?`, [noteId], function (err) {
+    if (err) {
+      return console.log(err.message);
+    }
+    // get the last insert id
+    console.log(
+      `A row has been deleted in notes table with rowid ${this.lastID}`
+    );
+    res.sendStatus(200);
+  });
 });
 
 app.listen(port, () => {
