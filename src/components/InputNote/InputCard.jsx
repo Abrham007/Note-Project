@@ -4,6 +4,8 @@ import InputTitle from "./InputTitle";
 import InputQuestion from "./InputQuestion";
 import InputMedia from "./InputMedia";
 import InputAnswer from "./InputAnswers";
+import SaveIcon from "@mui/icons-material/Save";
+import PreviewIcon from "@mui/icons-material/Preview";
 
 function InputCard(props) {
   const { register, handleSubmit, reset } = useForm();
@@ -52,15 +54,22 @@ function InputCard(props) {
         <InputMedia register={register} />
         <InputAnswer register={register} />
 
-        <div className="input-card__btn-group">
-          <button type="submit" className="btn--primary">
-            Submit
+        <div className="input-card__btn-group btn-group">
+          <button type="submit" className="btn">
+            <SaveIcon></SaveIcon>
           </button>
           <button
-            className="btn--primary"
+            className="btn"
+            style={props.isLoading ? { border: "none", outline: "none" } : {}}
             onClick={(event) => props.showNote(event)}
           >
-            Show
+            <div
+              className="loader"
+              style={{
+                display: props.isLoading ? "block" : "none",
+              }}
+            ></div>
+            <PreviewIcon></PreviewIcon>
           </button>
         </div>
       </div>
