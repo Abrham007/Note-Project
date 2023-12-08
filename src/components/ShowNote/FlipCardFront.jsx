@@ -10,8 +10,8 @@ function FlipCardFront(props) {
           <p>{props.title}</p>
         </div>
         <div>
-          <h2>Date</h2>
-          <p>{props.date}</p>
+          <h2>ID</h2>
+          <p>{props.id}</p>
         </div>
       </div>
       <div className="flip-card-front__question">
