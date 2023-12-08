@@ -34,12 +34,28 @@ app.get("/", (req, res) => {
   console.log("recived text request");
 
   db.serialize(() => {
-    db.all(`SELECT * FROM notes ORDER BY id DESC LIMIT (6)`, (err, rows) => {
+    db.all(
+      `SELECT * FROM section JOIN notes ON section.id = notes.title_id ORDER BY notes.id ASC  LIMIT(10)`,
+      (err, rows) => {
+        if (err) {
+          console.error(err.message);
+        }
+        notes = rows;
+        res.json(notes);
+      }
+    );
+  });
+});
+
+app.get("/modules", (req, res) => {
+  db.serialize(() => {
+    db.all(`SELECT module FROM module`, (err, rows) => {
       if (err) {
         console.error(err.message);
       }
-      notes = rows;
-      res.json(notes);
+      console.log(rows);
+      let moduleList = rows.map((row) => row.module);
+      res.json(moduleList);
     });
   });
 });
@@ -51,7 +67,7 @@ app.get("/images/:id", (req, res) => {
 
   db.serialize(() => {
     db.all(
-      `SELECT photo FROM img WHERE note_id = ? ORDER BY id DESC`,
+      `SELECT photo FROM img JOIN notes ON img.note_id = notes.id WHERE notes.id = (?) ORDER BY img.id DESC`,
       [id],
       (err, rows) => {
         if (err) {
