@@ -14,7 +14,6 @@ function FlipCardBack(props) {
   const [noteAudio, setNoteAudio] = useState();
   const [imgList, setImgList] = useState();
   const [flipCardImage, setFlipCardImage] = useState();
-  // const [flipCardAudio, setFlipCardAudio] = useState();
   const [isAuto, setIsAuto] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState();
@@ -54,6 +53,7 @@ function FlipCardBack(props) {
           `http://localhost:4000/images/${props.id}`
         );
         let imgBufferList = await responseImg.json();
+
         let imgURLList = imgBufferList.map((imgBuffer) => {
           let imgArray = new Uint8Array(imgBuffer.data);
           let imgBlob = new Blob([imgArray.buffer], { type: "image/png" });
