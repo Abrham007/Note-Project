@@ -38,11 +38,25 @@ function InputCard(props) {
     }
   }
 
+  async function fetchModule() {
+    try {
+      const response = await fetch("http://localhost:4000/modules");
+      const modules = await response.json();
+      console.log(modules);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     if (isSubmited) {
       reset();
     }
   }, [isSubmited]);
+
+  useEffect(() => {
+    fetchModule();
+  }, []);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
