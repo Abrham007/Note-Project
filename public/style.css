@@ -20,6 +20,8 @@ body {
   font-family: "Manrope", sans-serif;
   overflow-x: hidden;
   overflow-y: scroll;
+  position: relative;
+  z-index: -3;
 }
 
 h1 {
@@ -179,6 +181,7 @@ img {
 
 /* <<<------------------------ InputCard Section ---------------------->>>*/
 .input-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -207,11 +210,11 @@ img {
 }
 
 .input-card__title {
-  width: 40%;
+  width: 50%;
 }
 
 .input-card__module {
-  width: 30%;
+  width: 40%;
 }
 
 .input-card__ref {
@@ -369,6 +372,9 @@ img {
   border-radius: 0 3px 3px 0;
   user-select: none;
   -webkit-user-select: none;
+  background-color: transparent;
+  border: none;
+  outline: none;
 }
 
 /* Position the "next button" to the right */
@@ -399,6 +405,30 @@ img {
   overflow: auto;
 }
 
+/* width */
+
+.row::-webkit-scrollbar {
+  width: 1px;
+}
+
+/* Track */
+.row::-webkit-scrollbar-track {
+  background: var(--secondary);
+  border-radius: 8px;
+}
+
+/* Handle */
+.row::-webkit-scrollbar-thumb {
+  background: var(--teritery);
+  border-radius: 8px;
+}
+
+/* Handle on hover */
+.row::-webkit-scrollbar-thumb:hover {
+  cursor: pointer;
+  background: var(--teritery);
+}
+
 /* Six columns side by side */
 .column {
   width: 5%;
@@ -414,28 +444,6 @@ img {
   opacity: 1;
 }
 /* <<<------------------------ Custom Scrollbar -------------------->>> */
-/* width */
-::-webkit-scrollbar {
-  width: 1px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: var(--secondary);
-  border-radius: 8px;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: var(--teritery);
-  border-radius: 8px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  cursor: pointer;
-  background: var(--teritery);
-}
 
 .loader {
   position: absolute;
@@ -467,4 +475,123 @@ img {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.module-box {
+  position: absolute;
+  top: 0;
+  right: -185px;
+  width: 200px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: right 1s;
+  background-color: var(--teritery);
+  border-radius: 0px 15px 15px 0px;
+  z-index: -3;
+}
+
+.module-section {
+  max-width: 100%;
+  padding: 15px 15px 5px 30px;
+}
+
+.module-input {
+  padding: 7px 9px;
+  border-radius: 5px;
+  border-color: #6c5ce7;
+  outline-color: #6c5ce7;
+}
+
+.module-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 200px;
+  /* height: 100%; */
+  padding: 10px 15px 35px 30px;
+  background-color: var(--teritery);
+  border-radius: 0px 15px 15px 0px;
+  overflow: auto;
+}
+
+.module-list::-webkit-scrollbar {
+  width: 15px;
+}
+
+/* Track */
+.module-list::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 8px;
+}
+
+/* Handle */
+.module-list::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 8px;
+}
+
+/* Handle on hover */
+.module-list::-webkit-scrollbar-thumb:hover {
+  cursor: pointer;
+  background: var(--primary);
+}
+
+.module-form {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  border: 1px solid var(--primary);
+  border-radius: 5px;
+  background-color: white;
+}
+.module-text {
+  margin: auto;
+  width: 110px;
+  padding: 7px 9px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+}
+
+.module-btn {
+  /* width: 100px; */
+  padding: 7px 9px;
+  background-color: var(--secondary);
+  color: var(--teritery);
+  border: none;
+  border-radius: 5px;
+}
+
+.module-btn:hover {
+  cursor: pointer;
+  background-color: var(--primary);
+}
+
+.moduleon-btn {
+  position: absolute;
+  top: calc(50% - 25px);
+  right: -20px;
+  justify-content: flex-end;
+  background-color: var(--teritery);
+  z-index: -2;
+}
+
+.moduleon-btn:hover {
+  cursor: pointer;
+}
+
+.modulesave-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  background-color: transparent;
+}
+
+.modulesave-btn:hover {
+  cursor: pointer;
+  border: 1px solid var(--primary);
 }
