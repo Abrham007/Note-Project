@@ -1,6 +1,7 @@
 import React from "react";
 import FlipCardFront from "./FlipCardFront";
 import FlipCardBack from "./FlipCardBack";
+import ShowModule from "../ShowModule";
 
 function FlipCard(props) {
   return (
@@ -8,6 +9,7 @@ function FlipCard(props) {
       <div className="flip-card-inner">
         <FlipCardFront
           title={props.note.title}
+          module={props.note.module}
           question={props.note.question}
           notes={props.note.notes}
           date={props.note.date}
