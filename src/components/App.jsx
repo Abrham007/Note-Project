@@ -16,6 +16,32 @@ function App() {
     });
   }
 
+  async function showCustomNote(module_id) {
+    setIsLoading(true);
+    try {
+      let response = await fetch(
+        `http://localhost:4000/custom_note/${module_id}`
+      );
+      response.json().then((notesArray) => {
+        console.log(notesArray);
+        setNotes(
+          notesArray.map((note, index) => (
+            <FlipCard
+              key={note.id}
+              note={note}
+              showNote={showNote}
+              deleteNote={deleteNote}
+            />
+          ))
+        );
+        setIsLoading(false);
+        setIsInput((prevValue) => !prevValue);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async function deleteNote(id) {
     try {
       const response = await fetch(`http://localhost:4000/${id}`, {
@@ -49,7 +75,11 @@ function App() {
   }
 
   return isInput ? (
-    <InputCard showNote={showNote} isLoading={isLoading} />
+    <InputCard
+      showNote={showNote}
+      showCustomNote={showCustomNote}
+      isLoading={isLoading}
+    />
   ) : (
     notes
   );
