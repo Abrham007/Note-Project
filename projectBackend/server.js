@@ -35,11 +35,12 @@ app.get("/", (req, res) => {
 
   db.serialize(() => {
     db.all(
-      `SELECT * FROM section JOIN notes ON section.id = notes.title_id ORDER BY notes.id ASC  LIMIT(10)`,
+      `SELECT * FROM notes JOIN section ON notes.section_id = section.id JOIN module ON notes.module_id = module.id ORDER BY section.id DESC  LIMIT(10)`,
       (err, rows) => {
         if (err) {
           console.error(err.message);
         }
+        console.log(rows);
         notes = rows;
         res.json(notes);
       }
@@ -47,15 +48,64 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/modules", (req, res) => {
+app.get("/custom_note/:module_id", (req, res) => {
+  const module_id = req.params.module_id;
+  console.log("recived text request for custom note");
+
   db.serialize(() => {
-    db.all(`SELECT module FROM module`, (err, rows) => {
+    db.all(
+      `SELECT * FROM notes JOIN section ON notes.section_id = section.id JOIN module ON notes.module_id = module.id WHERE notes.module_id = (?)`,
+      [module_id],
+      (err, rows) => {
+        if (err) {
+          console.error(err.message);
+        }
+        console.log(rows);
+
+        res.json(rows);
+      }
+    );
+  });
+});
+
+app.get("/module", (req, res) => {
+  db.serialize(() => {
+    db.all(`SELECT * FROM module ORDER BY id ASC`, (err, rows) => {
       if (err) {
         console.error(err.message);
       }
-      console.log(rows);
-      let moduleList = rows.map((row) => row.module);
-      res.json(moduleList);
+
+      res.json(rows);
+    });
+  });
+});
+
+app.post("/module", (req, res) => {
+  const newModule = req.body.newModule;
+  const sectionId = req.body.sectionId;
+  db.run(
+    "INSERT INTO module(module, section_id) VALUE (?, ?)",
+    [newModule, sectionId],
+    function (err) {
+      if (err) {
+        return console.log(err.message);
+      }
+      // get the last insert id
+      console.log(
+        `A row has been inserted in module table with rowid ${this.lastID}`
+      );
+    }
+  );
+});
+
+app.get("/section", (req, res) => {
+  db.serialize(() => {
+    db.all(`SELECT * FROM section ORDER BY id ASC`, (err, rows) => {
+      if (err) {
+        console.error(err.message);
+      }
+
+      res.json(rows);
     });
   });
 });
@@ -93,15 +143,14 @@ app.post("/", cpUpload, async (req, res) => {
   let todayDate = new Date().toLocaleString();
 
   db.run(
-    `INSERT INTO notes(title, date, question, notes, audio, module, referance ) VALUES(?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO notes(date, question, notes, audio, section_id ,module_id) VALUES(?, ?, ?, ?, ?, ?, ?)`,
     [
-      req.body.title,
       todayDate,
       req.body.question,
       req.body.answer,
       audioBuffer,
-      req.body.module,
-      req.body.referance,
+      req.body.sectionId,
+      req.body.moduleId,
     ],
     async function (err) {
       if (err) {
