@@ -6,10 +6,14 @@ import InputMedia from "./InputMedia";
 import InputAnswer from "./InputAnswers";
 import SaveIcon from "@mui/icons-material/Save";
 import PreviewIcon from "@mui/icons-material/Preview";
+import ShowModule from "../ShowModule";
 
 function InputCard(props) {
   const { register, handleSubmit, reset } = useForm();
   const [isSubmited, setIsSubmited] = useState(false);
+  const [sectionList, setSectionList] = useState();
+  const [moduleList, setModuleList] = useState();
+  const [moduleReady, setModuleReady] = useState(false);
 
   async function onSubmit(data) {
     const formData = new FormData();
@@ -38,11 +42,23 @@ function InputCard(props) {
     }
   }
 
+  async function fetchSection() {
+    try {
+      const response = await fetch("http://localhost:4000/section");
+      const section = await response.json();
+
+      setSectionList(section);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async function fetchModule() {
     try {
-      const response = await fetch("http://localhost:4000/modules");
+      const response = await fetch("http://localhost:4000/module");
       const modules = await response.json();
-      console.log(modules);
+
+      setModuleList(modules);
     } catch (error) {
       console.log(error);
     }
@@ -54,38 +70,54 @@ function InputCard(props) {
     }
   }, [isSubmited]);
 
-  useEffect(() => {
-    fetchModule();
-  }, []);
+  if (!moduleReady) {
+    fetchSection();
+    fetchModule().then(() => {
+      setModuleReady(true);
+    });
+  }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
-      <div className="input-card">
-        <h1>Notes</h1>
+    <form
+      className="input-card"
+      onSubmit={handleSubmit(onSubmit)}
+      encType="multipart/form-data"
+    >
+      {moduleReady && (
+        <ShowModule
+          moduleList={moduleList}
+          sectionList={sectionList}
+          showCustomNote={props.showCustomNote}
+        />
+      )}
+      <h1>Notes</h1>
 
-        <InputTitle register={register} />
-        <InputQuestion register={register} />
-        <InputMedia register={register} />
-        <InputAnswer register={register} />
+      <InputTitle
+        register={register}
+        moduleList={moduleList}
+        sectionList={sectionList}
+      />
+      <InputQuestion register={register} />
+      <InputMedia register={register} />
+      <InputAnswer register={register} />
 
-        <div className="input-card__btn-group btn-group">
-          <button type="submit" className="btn">
-            <SaveIcon></SaveIcon>
-          </button>
-          <button
-            className="btn"
-            style={props.isLoading ? { border: "none", outline: "none" } : {}}
-            onClick={(event) => props.showNote(event)}
-          >
-            <div
-              className="loader"
-              style={{
-                display: props.isLoading ? "block" : "none",
-              }}
-            ></div>
-            <PreviewIcon></PreviewIcon>
-          </button>
-        </div>
+      <div className="input-card__btn-group btn-group">
+        <button type="submit" className="btn">
+          <SaveIcon></SaveIcon>
+        </button>
+        <button
+          className="btn"
+          style={props.isLoading ? { border: "none", outline: "none" } : {}}
+          onClick={(event) => props.showNote(event)}
+        >
+          <div
+            className="loader"
+            style={{
+              display: props.isLoading ? "block" : "none",
+            }}
+          ></div>
+          <PreviewIcon></PreviewIcon>
+        </button>
       </div>
     </form>
   );
