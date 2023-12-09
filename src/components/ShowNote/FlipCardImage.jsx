@@ -11,14 +11,13 @@ function FlipCardImage(props) {
     if (slideIndex % 5 === 0) {
       demoRows.current.scrollBy(350, 0);
     }
-
     if (slideIndex === 1) {
       demoRows.current.scrollTo(0, 0);
     }
   }, [slideIndex]);
 
   function addSlideIndex() {
-    setSlideIndex(slideIndex + 1);
+    setSlideIndex((prevValue) => prevValue + 1);
     if (slideIndex === props.images.length) {
       setSlideIndex(1);
     }
@@ -67,12 +66,12 @@ function FlipCardImage(props) {
         />
       ))}
 
-      <a className="prev" onClick={subtractSlideIndex} href="#">
+      <button className="prev" onClick={subtractSlideIndex} href="#">
         &#10094;
-      </a>
-      <a className="next" onClick={addSlideIndex} href="#">
+      </button>
+      <button className="next" onClick={addSlideIndex} href="#">
         &#10095;
-      </a>
+      </button>
 
       <div className="row" ref={demoRows}>
         {props.images.map((image, index) => (
