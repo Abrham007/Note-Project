@@ -48,13 +48,14 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/custom_note/:module_id", (req, res) => {
+app.get("/custom_note/:module_id/:section_id", (req, res) => {
   const module_id = req.params.module_id;
+  const section_id = req.params.section_id;
   console.log("recived text request for custom note");
 
   db.serialize(() => {
     db.all(
-      `SELECT * FROM notes JOIN section ON notes.section_id = section.id JOIN module ON notes.module_id = module.id WHERE notes.module_id = (?)`,
+      `SELECT * FROM notes WHERE notes.module_id = (?) AND notes.section_id`,
       [module_id],
       (err, rows) => {
         if (err) {

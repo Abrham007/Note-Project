@@ -16,11 +16,11 @@ function App() {
     });
   }
 
-  async function showCustomNote(module_id) {
+  async function showCustomNote(module_id, section_id) {
     setIsLoading(true);
     try {
       let response = await fetch(
-        `http://localhost:4000/custom_note/${module_id}`
+        `http://localhost:4000/custom_note/${module_id}/${section_id}`
       );
       response.json().then((notesArray) => {
         console.log(notesArray);

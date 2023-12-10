@@ -41,7 +41,7 @@ function ShowModule(props) {
           className="module-btn"
           key={index}
           onClick={() => {
-            props.showCustomNote(item.id);
+            props.showCustomNote(item.id, sectionId);
           }}
         >
           {item.module}
