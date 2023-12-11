@@ -21,8 +21,8 @@ function FlipCardBack(props) {
   const [audioFullTime, setAudioFullTime] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const autoBtn = useRef(null);
-  const playBtn = useRef(null);
+  let autoBtn = useRef(null);
+  let playBtn = useRef(null);
 
   function handleAudio() {
     let audioArray = new Uint8Array(props.audio.data);
