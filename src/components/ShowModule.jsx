@@ -17,8 +17,11 @@ function ShowModule(props) {
   }
 
   function chooseSection(event) {
-    const s = event.currentTarget.value;
+    const s = parseInt(event.currentTarget.value);
     setSectionId(s);
+    setCurrentModuleList(
+      props.moduleList.filter((module) => module.section_id == s)
+    );
   }
 
   async function handleSubmit() {
@@ -35,6 +38,8 @@ function ShowModule(props) {
   }
 
   useEffect(() => {
+    console.log("ready");
+
     setModule(
       currentModuleList.map((item, index) => (
         <button

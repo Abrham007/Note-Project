@@ -85,7 +85,7 @@ app.post("/module", (req, res) => {
   const newModule = req.body.newModule;
   const sectionId = req.body.sectionId;
   db.run(
-    "INSERT INTO module(module, section_id) VALUE (?, ?)",
+    "INSERT INTO module(module, section_id) VALUES (?, ?)",
     [newModule, sectionId],
     function (err) {
       if (err) {
@@ -144,7 +144,7 @@ app.post("/", cpUpload, async (req, res) => {
   let todayDate = new Date().toLocaleString();
 
   db.run(
-    `INSERT INTO notes(date, question, notes, audio, section_id ,module_id) VALUES(?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO notes(date, question, notes, audio, section_id ,module_id) VALUES(?, ?, ?, ?, ?, ?)`,
     [
       todayDate,
       req.body.question,
